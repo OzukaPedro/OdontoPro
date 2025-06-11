@@ -12,14 +12,20 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { LogIn, Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { handleRegister } from "../_actions/login";
 
 export function Header() {
+  const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
 
-  const session = null;
-
+  console.log(session);
+  console.log(status);
   const navItems = [{ href: "#profissionais", label: "Profissionais" }];
 
+  async function handleLogin() {
+    await handleRegister("github");
+  }
   const NavLinks = () => (
     <>
       {navItems.map((item) => (
@@ -33,10 +39,12 @@ export function Header() {
         </Button>
       ))}
 
-      {session ? (
+      {status === "loading" ? (
+        <></>
+      ) : session ? (
         <Link href="/dashboard">Acessar clinica</Link>
       ) : (
-        <Button>
+        <Button onClick={handleLogin}>
           <LogIn />
           Portal da clinica
         </Button>
