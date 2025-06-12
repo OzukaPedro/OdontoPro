@@ -1,8 +1,9 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const profileSchema = z.object({
+export const profileSchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
   address: z.string().optional(),
   phone: z.string().optional(),
@@ -10,7 +11,7 @@ const profileSchema = z.object({
   timeZone: z.string(),
 });
 
-type ProfileFormData = z.infer<typeof profileSchema>;
+export type ProfileFormData = z.infer<typeof profileSchema>;
 
 export function useProfileForm() {
   return useForm<ProfileFormData>({

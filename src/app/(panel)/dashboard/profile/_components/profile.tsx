@@ -1,6 +1,6 @@
 "use client";
 
-import { useProfileForm } from "./profile-form";
+import { useProfileForm } from "./profileForm";
 import {
   Form,
   FormControl,
@@ -19,22 +19,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+
 import Image from "next/image";
 import imgTest from "../../../../../../public/foto1.png";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+
+import { TimeZonesFilter } from "../_actions/timeZonesFilter";
+import { ProfileFieldForm } from "./profileField";
+import { ProfileTimeDialog } from "./profileTimeDialog";
+import { TimeZoneField } from "./timeZoneField";
 
 export function ProfileContent() {
   const form = useProfileForm();
+
+  const timeZones = TimeZonesFilter();
 
   return (
     <div className="mx-auto">
@@ -56,123 +54,44 @@ export function ProfileContent() {
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome Completo</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Digite o nome da clinica..."
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <ProfileFieldForm
+                name="name"
+                label="Nome"
+                placeholder="Digite o nome da clinica"
+              />
 
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Endereço completo</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Digite o endereço da clinica..."
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <ProfileFieldForm
+                name="address"
+                label="Endereço"
+                placeholder="Digite o endereço da clinica"
+              />
 
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefone</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Digite o telefone..." />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <ProfileFieldForm
+                name="phone"
+                label="Telefone"
+                placeholder="Digite o telefone "
+              />
 
-              <div className="space-y-4 w-full">
-                <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Status da clinica</FormLabel>
+              <ProfileFieldForm
+                type="select"
+                name="status"
+                label="Status"
+                items={[
+                  { value: "active", text: "Ativo" },
+                  { value: "inactive", text: "Inativo" },
+                ]}
+              />
 
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value ? "active " : "inactive"}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Selecione" />
-                            <SelectContent>
-                              <SelectItem value="active">
-                                Ativo (clinica aberta)
-                              </SelectItem>
-                              <SelectItem value="inactive">
-                                Inativo (clinica fechada)
-                              </SelectItem>
-                            </SelectContent>
-                          </SelectTrigger>
-                        </Select>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <ProfileTimeDialog />
 
-              <div className="space-y-2">
-                <Label className="semibold">
-                  Selecione a zona horaria da clinica
-                </Label>
+              <TimeZoneField />
 
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-between"
-                    >
-                      Clique aqui para selecionar horários
-                      <ArrowRight className="w-5 h-5" />
-                    </Button>
-                  </DialogTrigger>
-
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Horários da clinica</DialogTitle>
-                      <DialogDescription>
-                        Selecione abaixo os horários de funcionamento da clinica
-                      </DialogDescription>
-                    </DialogHeader>
-
-                    <section className="py-4 ">
-                      <p className="text-sm text-muted-foreground">
-                        Clique nos horarios abaixo para marcar ou desmarcar
-                      </p>
-                    </section>
-                  </DialogContent>
-                </Dialog>
-              </div>
+              <Button
+                className="font-semibold w-full bg-emerald-500 hover:bg-emerald-400"
+                type="submit"
+              >
+                Salvar Alterações
+              </Button>
             </CardContent>
           </Card>
         </form>
