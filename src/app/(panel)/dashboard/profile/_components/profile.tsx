@@ -19,9 +19,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import imgTest from "../../../../../../public/foto1.png";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export function ProfileContent() {
   const form = useProfileForm();
@@ -59,6 +69,7 @@ export function ProfileContent() {
                           placeholder="Digite o nome da clinica..."
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -70,13 +81,14 @@ export function ProfileContent() {
                   name="address"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Endereçoo completo</FormLabel>
+                      <FormLabel>Endereço completo</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           placeholder="Digite o endereço da clinica..."
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -92,6 +104,7 @@ export function ProfileContent() {
                       <FormControl>
                         <Input {...field} placeholder="Digite o telefone..." />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -126,6 +139,39 @@ export function ProfileContent() {
                     </FormItem>
                   )}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="semibold">
+                  Selecione a zona horaria da clinica
+                </Label>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-between"
+                    >
+                      Clique aqui para selecionar horários
+                      <ArrowRight className="w-5 h-5" />
+                    </Button>
+                  </DialogTrigger>
+
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Horários da clinica</DialogTitle>
+                      <DialogDescription>
+                        Selecione abaixo os horários de funcionamento da clinica
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <section className="py-4 ">
+                      <p className="text-sm text-muted-foreground">
+                        Clique nos horarios abaixo para marcar ou desmarcar
+                      </p>
+                    </section>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
           </Card>
