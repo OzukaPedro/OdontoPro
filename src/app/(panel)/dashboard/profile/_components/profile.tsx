@@ -35,12 +35,31 @@ import { ArrowRight } from "lucide-react";
 
 import imgTest from "../../../../../../public/foto1.png";
 import { cn } from "@/lib/utils";
+import { Prisma } from "@prisma/client";
 
-export function ProfileContent() {
-  const [selectedHours, setSelectedHours] = useState<string[]>([]);
+type UserWithSubscription = Prisma.UserGetPayload<{
+  include: {
+    subscription: true;
+  };
+}>;
+
+interface ProfileContentProps {
+  user: UserWithSubscription;
+}
+
+export function ProfileContent({ user }: ProfileContentProps) {
+  const [selectedHours, setSelectedHours] = useState<string[]>(
+    user.times ?? []
+  );
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
-  const form = useProfileForm();
+  const form = useProfileForm({
+    name: user.name,
+    address: user.address,
+    phone: user.phone,
+    status: user.status,
+    timeZone: user.timeZone,
+  });
 
   function generateTimeSlots(): string[] {
     const hours: string[] = [];
@@ -172,7 +191,7 @@ export function ProfileContent() {
                           onValueChange={field.onChange}
                           defaultValue={field.value ? "active" : "inactive"}
                         >
-                          <SelectTrigger className="w-full">
+                          <SelectTrigger>
                             <SelectValue placeholder="Selecione o status da clincia" />
                           </SelectTrigger>
                           <SelectContent>
@@ -260,7 +279,7 @@ export function ProfileContent() {
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
-                          <SelectTrigger className="w-full">
+                          <SelectTrigger>
                             <SelectValue placeholder="Selecione o seu fuso horário" />
                           </SelectTrigger>
                           <SelectContent>
