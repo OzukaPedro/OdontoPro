@@ -36,10 +36,13 @@ import { ArrowRight } from "lucide-react";
 import imgTest from "../../../../../../public/foto1.png";
 import { cn } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
+import { updateProfile } from "../_actions/update-profile";
+import { toast } from "sonner";
+import { formatPhone } from "@/utils/formatPhone";
 
 type UserWithSubscription = Prisma.UserGetPayload<{
   include: {
-    subscription: true;
+    subscription: true | null;
   };
 }>;
 
@@ -98,11 +101,20 @@ export function ProfileContent({ user }: ProfileContentProps) {
   );
 
   async function onSubmit(values: ProfileFormData) {
-    const profileData = {
-      ...values,
+    const response = await updateProfile({
+      name: values.name,
+      address: values.address,
+      phone: values.phone,
+      status: values.status === "active" ? true : false,
+      timeZone: values.timeZone,
       times: selectedHours,
-    };
-    console.log("values: ", profileData);
+    });
+
+    if (response.error) {
+      toast.error(response.error, { closeButton: true });
+      return;
+    }
+    toast.success(response.data);
   }
 
   return (
@@ -117,7 +129,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
               <div className="flex justify-center">
                 <div className="bg-gray-200 relative h-40 w-40 rounded-full overflow-hidden">
                   <Image
-                    src={imgTest}
+                    src={user.image ? user.image : imgTest}
                     alt="Foto da clinica"
                     fill
                     className="object-cover"
@@ -171,7 +183,14 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     <FormItem>
                       <FormLabel className="font-semibold">Telefone</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Digite o telefone..." />
+                        <Input
+                          {...field}
+                          placeholder="Digite o telefone..."
+                          onChange={(e) => {
+                            const formattedValue = formatPhone(e.target.value);
+                            field.onChange(formattedValue);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -191,7 +210,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           onValueChange={field.onChange}
                           defaultValue={field.value ? "active" : "inactive"}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecione o status da clincia" />
                           </SelectTrigger>
                           <SelectContent>
@@ -279,7 +298,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecione o seu fuso horário" />
                           </SelectTrigger>
                           <SelectContent>

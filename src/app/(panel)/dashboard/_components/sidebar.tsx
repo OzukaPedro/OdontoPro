@@ -160,7 +160,7 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
         >
           <Sheet>
             <div className="flex items-center gap-4">
-              <SheetTrigger className="md:hidden">
+              <SheetTrigger asChild className="md:hidden">
                 <Button
                   onClick={() => setIsCollapsed(false)}
                   variant="outline"
